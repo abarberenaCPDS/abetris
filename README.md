@@ -9,6 +9,17 @@
 [![Rule tests: 256 checks](https://img.shields.io/badge/rule%20tests-256%20checks-brightgreen)](docs/VERIFYING.md#1-rule-tests-host-no-toolchain)
 [![Hardware: flashed, boot check pending](https://img.shields.io/badge/hardware-flashed%20%28boot%20check%20pending%29-yellow)](docs/VERIFYING.md#7-hardware)
 
+## Tribute
+
+Abetris is inspired by **Tetris**, created by **Alexey Pajitnov** in Moscow.
+This game is a tribute to him, and its `[]` playfield follows the look of the
+original ASCII version.
+
+- [YT - Tetris Creator Alexy Pajitnov & Designer Henk Rogers](https://www.youtube.com/watch?v=6YhkkyXydNI)
+
+## Intro
+
+
 A Tetris game for the ModRetro Chromatic, built as a native GB Studio 4.3.2
 project. The playfield is the 10-column ASCII well from the original terminal
 Tetris: `[]` blocks, `<!` `!>` walls, and a `<!====!>` floor.
@@ -18,12 +29,6 @@ Four lines at once is an **ABETRIS**.
 **Status:** 0.1.0 is playable in the emulator and was flashed to a ModRetro
 Chromatic (the vendor tool reported success). The on-device boot check is still
 pending. See [VERIFYING.md](docs/VERIFYING.md#7-hardware).
-
-## Tribute
-
-Abetris is inspired by **Tetris**, created by **Alexey Pajitnov** in Moscow.
-This game is a tribute to him, and its `[]` playfield follows the look of the
-original ASCII version.
 
 ## Controls
 
