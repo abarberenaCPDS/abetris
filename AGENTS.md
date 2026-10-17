@@ -19,6 +19,21 @@ Read in this order, and treat these as authoritative over README and CHANGELOG:
 - Keep changes focused. Commit subjects are one line, conventional commit style,
   no body. Semantic versioning: patch bumps unless the owner says otherwise.
 
+## Hardware
+
+- `play` streams the ROM to a Chromatic for a set time. It never writes the
+  cartridge. Use it only when the owner asks for a live demo.
+- `flash` overwrites the cartridge's game data and saves, with no backup. The
+  first flash on a device needs the owner's explicit acceptance of that. The
+  owner accepted it for Chromatic player 1 on 2026-10-17. Later writes the owner
+  asks for on the same device don't need the acceptance again, but they still
+  need a fresh discovery, `rom_inspect` values and a unique request ID.
+- Never flash a guessed ROM. Never request or accept Developer Mode activation
+  codes; activation is handled with ModRetro Updater.
+- Device tokens are single-use and expire after a few minutes. A lost reply is
+  checked with `device operation_status` for the same request ID, never by
+  sending a second write.
+
 ## Layout
 
 - `project.gbsproj`, `project/` — GB Studio resources: settings, scenes, palettes,
@@ -52,6 +67,10 @@ Read in this order, and treat these as authoritative over README and CHANGELOG:
   and the engine runs the scene's update only while unlocked. An endless loop in
   the main script freezes the game. Idle with `EVENT_IDLE`, not `EVENT_WAIT`, since
   `EVENT_WAIT` locks the VM too.
+- The rules compile as banked code: `ABL_FN` expands to `BANKED` on the Game Boy
+  and to nothing on the host. Bank 0 was over budget with the rules as fixed
+  code, so keep new code out of bank 0 and watch the build for
+  `ROM_CAPACITY_EXCEEDED`.
 - Glyph tile ids are read from the play background's own tilemap at the atlas
   position (`ATLAS_X`, `ATLAS_Y`). Nothing hard-codes VRAM ids.
 - The play background is 32 tiles wide, but the field never scrolls: the scene
@@ -75,3 +94,7 @@ python3 tools/make_sfx.py
 
 Music is regenerated with `tools/make_music.py` and the `uge-builder` image
 (commands in `docs/VERIFYING.md`).
+
+On this Mac, the MCP `rom_build` tool reports compiler diagnostics. The CLI
+reports only the exit status, so a failed build looks like
+`buildTask process terminated with error: 1`.

@@ -48,35 +48,77 @@ python3 "$HT/abe/composer/verify_uge.py" assets/music/korobeiniki.json assets/mu
 
 ## 5. ROM build
 
+Use the MCP `rom_build` tool. The CLI prints only `buildTask process terminated
+with error: 1` when the compiler fails; the MCP tool returns the diagnostics.
+Pass `captureDebugArtifacts: true` to also get a `symbols.noi` for the same ROM.
+
+CLI alternative:
+
 ```sh
 CLI="/Users/abe/Library/Application Support/modretro-chromatic/toolchain/.local/vendor/gb-studio/out/cli/gb-studio-cli.js"
 node "$CLI" make:rom project.gbsproj build/project.gb > build/rom-build.log 2>&1
 ```
 
-Checklist after a build:
+Checklist, with the results for build `7e3213…` (2026-10-17):
 
-| Check | Expected |
-| --- | --- |
-| Build log | no errors; the plugin compiles; the eight sound ids and the music id appear |
-| Header | Nintendo logo valid, header checksum valid (`rom_inspect`) |
-| Size | 131,072 bytes (MBC5, GBC-only) |
-| Project health | 0 errors, 0 warnings |
+| Check | Expected | Result |
+| --- | --- | --- |
+| Compile | no errors; the plugin, sounds and music compile | pass |
+| Link | no `ROM_CAPACITY_EXCEEDED` | pass |
+| Header | Nintendo logo and header checksum valid (`rom_inspect`) | pass |
+| Size and type | 131,072 bytes, MBC5, GBC-only, title `ABETRIS` | pass |
+| Project health | 0 errors, 0 warnings | pass |
 
-## 6. Playing it
+## 6. Playing it in the emulator
 
-- Browser: MCP `web_preview` (use the URL it returns). The preview server lives in
-  the MCP process; keep that process running while you look at it.
-- Headless: PyBoy in the toolchain venv (`sound_emulated=True`). Count non-zero
-  audio samples to confirm music is playing (expect continuous non-zero samples
-  after the title loads). To check one sound effect, count samples with and
-  without the effect (see the gardener project's `docs/VERIFYING.md`).
-- Gameplay checks to run by hand: title → Start → the piece falls from top
-  centre; A and B turn it both ways; Left/Right auto-repeat; Down speeds it up;
-  Start pauses and resumes; four rows give ABETRIS; game over returns to the
-  title with Start.
+Headless checks use PyBoy from the toolchain venv. Read the game's RAM at the
+addresses in the `symbols.noi` from the same build, so the addresses match the
+ROM.
+
+Verified on build `7e3213…`:
+
+- The title renders with PRESS START, and Start opens the play scene.
+- The piece falls from the top centre; A turns it; Start shows PAUSED and resumes.
+- Down speeds the fall, and soft drop adds to the score.
+- A stack reaches the top: GAME OVER shows, and Start returns to the title.
+- The rotate sound request is raised for one frame, then consumed.
+
+Not yet verified:
+
+- Left and Right moves (not probed).
+- A four-row ABETRIS clear and LEVEL UP on screen.
+- The music and the sound effects, by ear or by sample count.
 
 ## 7. Hardware
 
-`play` streams video and audio to a real Chromatic and never writes the
-cartridge. `flash` overwrites the cartridge. Do not use it without explicit
-data-loss consent, a fresh device discovery, and the exact ROM hash.
+**Stream (`play`):** a 60-second stream to Chromatic player 1 (`GWU2X`) on
+2026-10-17. The vendor reported success, the process closed, and
+`cartridgeWrite` was `not-dispatched`. Saves were off. The host can't send input,
+so a Start-gated ROM waits on its title screen.
+
+**Flash (`flash`):** written to Chromatic player 1 on 2026-10-17 (build
+`7e3213…`, 131,072 bytes). The vendor reported success after 23 seconds. The
+tool reports `manualBootAndPlayVerified: false`, so the boot check below is still
+needed.
+
+On the device, check:
+
+1. The ABETRIS title with PRESS START appears.
+2. Start begins a game, and the piece falls from the top centre.
+3. A and B rotate both ways; Left and Right move; Down drops faster.
+4. Start pauses and resumes.
+5. Music plays and loops, and the sound effects are audible.
+6. A stack that reaches the top shows GAME OVER, and Start returns to the title.
+
+Record the result in [`CHANGELOG.md`](CHANGELOG.md).
+
+Rules for hardware actions:
+
+- `play` and `flash` each need a token from a fresh `device list_devices`. Tokens
+  are single-use and lasted about five minutes.
+- `rom_inspect` must show the same path, size and SHA-256 that you pass in.
+- The first flash on a device needs the owner's explicit acceptance that the
+  cartridge's game data and saves are erased and no backup is made. The owner
+  accepted it for Chromatic player 1 on 2026-10-17.
+- If a reply is lost or an operation is uncertain, read `device operation_status`
+  for the same request ID. Never send a second write.

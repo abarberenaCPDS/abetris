@@ -5,13 +5,25 @@
 [![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-2f855a)](docs/CHANGELOG.md)
 [![Semantic Versioning 2.0.0](https://img.shields.io/badge/semver-2.0.0-blue)](https://semver.org)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-fe5196)](https://www.conventionalcommits.org)
-[![Status: in development](https://img.shields.io/badge/status-in%20development-dd6b20)](docs/GAME-DESIGN.md)
+[![Status: playable](https://img.shields.io/badge/status-playable-brightgreen)](docs/GAME-DESIGN.md)
+[![Rule tests: 256 checks](https://img.shields.io/badge/rule%20tests-256%20checks-brightgreen)](docs/VERIFYING.md#1-rule-tests-host-no-toolchain)
+[![Hardware: flashed, boot check pending](https://img.shields.io/badge/hardware-flashed%20%28boot%20check%20pending%29-yellow)](docs/VERIFYING.md#7-hardware)
 
 A Tetris game for the ModRetro Chromatic, built as a native GB Studio 4.3.2
 project. The playfield is the 10-column ASCII well from the original terminal
 Tetris: `[]` blocks, `<!` `!>` walls, and a `<!====!>` floor.
 
 Four lines at once is an **ABETRIS**.
+
+**Status:** 0.1.0 is playable in the emulator and was flashed to a ModRetro
+Chromatic (the vendor tool reported success). The on-device boot check is still
+pending. See [VERIFYING.md](docs/VERIFYING.md#7-hardware).
+
+## Tribute
+
+Abetris is inspired by **Tetris**, created by **Alexey Pajitnov** in Moscow.
+This game is a tribute to him, and its `[]` playfield follows the look of the
+original ASCII version.
 
 ## Controls
 
@@ -49,13 +61,23 @@ Run from the project root. The toolchain paths are in
 mkdir -p build && cc -std=c99 -Wall -Wextra -Werror -Iplugins/abetris/engine/include \
   tests/test_logic.c plugins/abetris/engine/src/abetris_logic.c -o build/test_logic
 build/test_logic
-
-# ROM
-node "$CLI" make:rom project.gbsproj build/project.gb
 ```
 
+Build the ROM with the MCP `rom_build` tool, which reports compiler diagnostics,
+or with the CLI in [`docs/GBSTUDIO-BASELINE.md`](docs/GBSTUDIO-BASELINE.md).
 What each check proves, and what a good build looks like, is in
 [`docs/VERIFYING.md`](docs/VERIFYING.md).
+
+## Hardware
+
+- **Stream:** `play` runs the ROM on a Chromatic for a set time. It doesn't write
+  the cartridge, and the host can't send button presses.
+- **Flash:** `flash` overwrites the cartridge's game data and saves, with no
+  backup. The first flash on each device needs the owner's explicit acceptance
+  of that.
+- **0.1.0:** streamed for 60 seconds and flashed to Chromatic player 1 on
+  2026-10-17. The vendor tool reported success. The on-device checks are still to
+  do; see [`docs/VERIFYING.md`](docs/VERIFYING.md#7-hardware).
 
 ## Project layout
 
@@ -74,11 +96,11 @@ VERSION               semantic version, 0.1.0
 
 | Doc | For |
 | --- | --- |
-| [`AGENTS.md`](AGENTS.md) | Rules for working in this repo, and the engine notes |
+| [`AGENTS.md`](AGENTS.md) | Rules for working in this repo, hardware consent, and the engine notes |
 | [`docs/GAME-DESIGN.md`](docs/GAME-DESIGN.md) | Rules, controls, levels, scoring, sound |
-| [`docs/VERIFYING.md`](docs/VERIFYING.md) | How to check a build and the gameplay |
+| [`docs/VERIFYING.md`](docs/VERIFYING.md) | How to check a build, the gameplay, and the hardware |
 | [`docs/GBSTUDIO-BASELINE.md`](docs/GBSTUDIO-BASELINE.md) | Toolchain, MCP workflow, engine traps |
-| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | What changed in each version |
+| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | What changed in each version, and the known limits |
 | [`docs/abes-ascii-tetris.md`](docs/abes-ascii-tetris.md) | The original brief |
 | [`docs/image.png`](docs/image.png) | The reference picture |
 

@@ -78,6 +78,26 @@ Gotchas:
   compiler packs to 4-bit wave samples). Music needs a `.uge` + sidecar id.
   Registration ≠ use: music needs `EVENT_MUSIC_PLAY`, WAVs need
   `EVENT_SOUND_PLAY_EFFECT`; unused assets may not reach the ROM.
+- Scene main scripts are locked: the scene's `script` runs with `VM_LOCK` and
+  unlocks only when it ends. The engine runs the scene update only while
+  unlocked, so an endless `EVENT_LOOP` in the main script freezes the scene. Put
+  loops in `EVENT_THREAD_START`. Yield with `EVENT_IDLE`; `EVENT_WAIT` locks too.
+- Custom scene types: an engine plugin (`plugin.json` with
+  `"type": "enginePlugin"`, `engine/engine.json` with `sceneTypes`) plus
+  `engine/src/states/<key>.c` that defines `<key>_init` and `<key>_update` as
+  `BANKED`. Only used scene types get enum values, and the state table follows
+  them.
+- Bank 0 overflow: the linker reports `ROM_CAPACITY_EXCEEDED: Possible overflow
+  from Bank 0 into Bank 1`. Non-banked code lands in bank 0, so move larger code
+  into a banked bank (`#pragma bank 255`, and `BANKED` on functions called from
+  other files).
+- The CLI hides compiler errors (`buildTask process terminated with error: 1`).
+  The MCP `rom_build` returns the diagnostics, and `captureDebugArtifacts: true`
+  returns a `symbols.noi` for the same ROM.
+- `EVENT_MUSIC_PLAY` always compiles with `.MUSIC_NO_LOOP`. For hUGE songs the
+  driver ignores that flag, so looping comes from the song's order data.
+- Hardware WAV playback runs at 8192 samples/s (32 samples per 256 Hz timer
+  tick), so an 8000 Hz file plays about 2.4% fast on the device.
 
 ## Release / versioning
 - Patch bumps unless told otherwise. Order: edit `VERSION` → regenerate version
@@ -99,3 +119,10 @@ Gotchas:
   Requires explicit data-loss consent, fresh device discovery, a returned token,
   the exact ROM hash/size and a unique request id. Vendor "write success" is not
   manual boot verification. Never flash a guessed ROM.
+- Device tokens are single-use: `play` and `flash` each consume one. Get a fresh
+  `device list_devices` before each action. A token lasted about five minutes.
+- `play` cannot send button presses from the host, so a Start-gated ROM waits on
+  its title screen. Whether the handheld's own buttons reach it is not verified.
+- The first `flash` on each device needs the owner's explicit acceptance of data
+  loss. A lost reply is checked with `device operation_status` for the same
+  request ID; never send a second write.
