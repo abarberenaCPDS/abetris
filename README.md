@@ -115,3 +115,7 @@ VERSION               semantic version, 0.1.0
   source of truth; patch bumps unless a minor or major change is agreed.
 - Commit subjects are one line in [conventional commit](https://www.conventionalcommits.org)
   form, with no body.
+
+---
+
+Made with ❤️ by Codex & ModRetro Chromatic.
