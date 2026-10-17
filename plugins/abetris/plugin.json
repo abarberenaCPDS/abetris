@@ -1,0 +1,10 @@
+{
+  "id": "abetris",
+  "type": "enginePlugin",
+  "version": "0.1.0",
+  "gbsVersion": "^4.3.0",
+  "name": "Abetris engine",
+  "author": "abe",
+  "description": "Scene type ABETRIS: Tetris rules and the terminal play field for the ModRetro Chromatic.",
+  "filename": "abetris"
+}

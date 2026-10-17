@@ -1,0 +1,18 @@
+{
+  "_resourceType": "palette",
+  "id": "abetris-green",
+  "name": "Abetris Green",
+  "colors": [
+    "33FF33",
+    "20A020",
+    "106410",
+    "081808"
+  ],
+  "defaultName": "Abetris Green",
+  "defaultColors": [
+    "33FF33",
+    "20A020",
+    "106410",
+    "081808"
+  ]
+}

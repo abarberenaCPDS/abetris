@@ -1,0 +1,16 @@
+{
+  "_resourceType": "variables",
+  "variables": [
+    {
+      "id": "0",
+      "name": "sfx_request",
+      "symbol": "var_sfx_request"
+    },
+    {
+      "id": "1",
+      "name": "goto_title",
+      "symbol": "var_goto_title"
+    }
+  ],
+  "constants": []
+}

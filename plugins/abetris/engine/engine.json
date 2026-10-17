@@ -1,0 +1,25 @@
+{
+  "version": "4.3.0-e1",
+  "fields": [],
+  "consts": {},
+  "sceneTypes": [
+    {
+      "key": "ABETRIS",
+      "label": "Abetris",
+      "files": [
+        "include/states/abetris.h",
+        "src/states/abetris.c"
+      ],
+      "collisionTiles": [
+        {
+          "key": "solid",
+          "color": "#FA2828FF",
+          "mask": 15,
+          "flag": 15,
+          "name": "FIELD_SOLID",
+          "icon": "FFFFFFFFFFFFFFFF"
+        }
+      ]
+    }
+  ]
+}

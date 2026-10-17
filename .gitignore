@@ -1,0 +1,20 @@
+# Build output: ROM, web export, debug symbols, host test binary
+build/
+
+# GB Studio writes these per machine
+project/user_settings.gbsres
+*.gbsres.bak
+
+# Emulator save states and hardware restore points
+save-states/
+hardware-backup/
+
+# Python and macOS noise
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+
+# Local agent state
+.codex/
+.claude/settings.local.json

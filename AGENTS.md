@@ -1,0 +1,77 @@
+# Abetris — agent notes
+
+Read in this order, and treat these as authoritative over README and CHANGELOG:
+1. `AGENTS.md` (this file)
+2. `docs/GBSTUDIO-BASELINE.md` — toolchain, MCP workflow, engine traps
+3. `docs/VERIFYING.md` — how to check a build
+4. `docs/GAME-DESIGN.md` — the rules the code must follow
+
+## Rules of engagement
+
+- Prefer the modretro-chromatic MCP tools for build and preview. Fall back to the
+  CLI in `docs/GBSTUDIO-BASELINE.md`.
+- After hand-editing any `*.gbsres`, run a **strong** `project_refresh` before
+  `rom_build` / `web_build`.
+- The browser simulator is MCP `web_preview`. Use the URL it returns; never a
+  remembered port.
+- Never flash the cartridge. No device write without explicit data-loss consent.
+- Builds are not byte-reproducible. Verify content, header and gameplay, not hashes.
+- Keep changes focused. Commit subjects are one line, conventional commit style,
+  no body. Semantic versioning: patch bumps unless the owner says otherwise.
+
+## Layout
+
+- `project.gbsproj`, `project/` — GB Studio resources: settings, scenes, palettes,
+  variables. Start scene is the title.
+- `assets/` — backgrounds, font, sprite, music, sounds and their `.gbsres` sidecars.
+  The PNG, WAV and UGE files are generated; the sidecars are GB Studio's.
+- `plugins/abetris/` — engine plugin that adds the `ABETRIS` scene type.
+- `tools/` — generators. Change the generator and re-run it; do not hand-edit
+  its output.
+  - `make_art.py`: title and play backgrounds, font, player sprite, UI tiles, and
+    `plugins/abetris/engine/include/abetris_layout.h` (glyph atlas indices).
+  - `make_sfx.py`: the eight WAVs.
+  - `make_music.py`: writes `assets/music/korobeiniki.json`; that JSON becomes
+    `korobeiniki.uge` through the `uge-builder` Docker image.
+- `tests/test_logic.c` — host tests of the rules (see `docs/VERIFYING.md`).
+- `docs/` — design, verification, baseline, changelog and the original brief.
+
+## Engine notes
+
+- The rules live in `plugins/abetris/engine/src/abetris_logic.c`. It includes no
+  GBDK headers on purpose, so `tests/test_logic.c` can build it on the host. Keep
+  it that way.
+- `plugins/abetris/engine/src/states/abetris.c` is the scene glue: input, drawing
+  and the state machine. It runs as the `ABETRIS` scene type.
+- The C code cannot start a sound or change scene. It writes requests into script
+  variables (`var_sfx_request`, `var_goto_title`), and a thread that the play scene
+  starts (`EVENT_THREAD_START` around an `EVENT_LOOP`, in
+  `project/scenes/play/scene.gbsres`) acts on them. When you add a sound, change
+  both: the C constants `SFX_*` and the `EVENT_SWITCH` cases.
+- Keep that loop inside the thread. A scene's main script is locked until it ends,
+  and the engine runs the scene's update only while unlocked. An endless loop in
+  the main script freezes the game. Idle with `EVENT_IDLE`, not `EVENT_WAIT`, since
+  `EVENT_WAIT` locks the VM too.
+- Glyph tile ids are read from the play background's own tilemap at the atlas
+  position (`ATLAS_X`, `ATLAS_Y`). Nothing hard-codes VRAM ids.
+- The play background is 32 tiles wide, but the field never scrolls: the scene
+  sets its scroll bounds to zero and hides sprites.
+- Music and sound: `EVENT_MUSIC_PLAY` on each scene. The sound effects are
+  `EVENT_SOUND_PLAY_EFFECT` with the ids in `assets/sounds/*.wav.gbsres`.
+
+## Commands
+
+From the project root (see the baseline for the CLI path):
+
+```sh
+mkdir -p build && cc -std=c99 -Wall -Wextra -Werror -Iplugins/abetris/engine/include \
+  tests/test_logic.c plugins/abetris/engine/src/abetris_logic.c -o build/test_logic
+build/test_logic
+
+PY="/Users/abe/Library/Application Support/modretro-chromatic/toolchain/.local/pyboy-venv/bin/python"
+"$PY" tools/make_art.py
+python3 tools/make_sfx.py
+```
+
+Music is regenerated with `tools/make_music.py` and the `uge-builder` image
+(commands in `docs/VERIFYING.md`).

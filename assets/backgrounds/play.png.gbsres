@@ -1,0 +1,13 @@
+{
+  "_resourceType": "background",
+  "id": "0513ea42-3da5-4ae4-a5b2-c6b55f9bc15c",
+  "name": "Play",
+  "symbol": "bg_play",
+  "tileColors": "",
+  "filename": "play.png",
+  "width": 32,
+  "height": 18,
+  "imageWidth": 256,
+  "imageHeight": 144,
+  "autoColor": false
+}

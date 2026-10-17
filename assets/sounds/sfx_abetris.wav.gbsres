@@ -1,0 +1,8 @@
+{
+  "_resourceType": "sound",
+  "id": "7d2e9c41-5a3b-4c8d-9e1f-0a6b2c3d4e04",
+  "name": "Abetris",
+  "symbol": "sound_sfx_abetris",
+  "type": "wav",
+  "filename": "sfx_abetris.wav"
+}
