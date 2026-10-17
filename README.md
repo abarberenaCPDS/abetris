@@ -1,4 +1,4 @@
-# Abetris
+# 🎮 Abetris
 
 [![GB Studio 4.3.2](https://img.shields.io/badge/GB%20Studio-4.3.2-2b6cb0)](https://www.gbstudio.dev)
 [![ModRetro Chromatic GBC](https://img.shields.io/badge/ModRetro%20Chromatic-GBC%20MBC5-6b46c1)](docs/GBSTUDIO-BASELINE.md)
@@ -9,7 +9,7 @@
 [![Rule tests: 256 checks](https://img.shields.io/badge/rule%20tests-256%20checks-brightgreen)](docs/VERIFYING.md#1-rule-tests-host-no-toolchain)
 [![Hardware: flashed, boot check pending](https://img.shields.io/badge/hardware-flashed%20%28boot%20check%20pending%29-yellow)](docs/VERIFYING.md#7-hardware)
 
-## Tribute
+## 🙏 Tribute
 
 Abetris is inspired by **Tetris**, created by **Alexey Pajitnov** in Moscow.
 This game is a tribute to him, and its `[]` playfield follows the look of the
@@ -17,7 +17,7 @@ original ASCII version.
 
 - [YT - Tetris Creator Alexy Pajitnov & Designer Henk Rogers](https://www.youtube.com/watch?v=6YhkkyXydNI)
 
-## Intro
+## 📖 Intro
 
 A Tetris game for the ModRetro Chromatic, built as a native GB Studio 4.3.2
 project. The playfield is the 10-column ASCII well from the original terminal
@@ -33,7 +33,7 @@ Four lines at once is an **ABETRIS**.
 Chromatic (the vendor tool reported success). The on-device boot check is still
 pending. See [VERIFYING.md](docs/VERIFYING.md#7-hardware).
 
-## Controls
+## 🎮 Controls
 
 | Button | Action |
 | --- | --- |
@@ -45,7 +45,7 @@ pending. See [VERIFYING.md](docs/VERIFYING.md#7-hardware).
 
 On the title screen, Start begins a game.
 
-## Levels
+## 📊 Levels
 
 Four levels. The piece falls faster at each one, and the level goes up every 10
 lines. Level 0 starts easy, with the piece dropping from the top centre.
@@ -59,7 +59,7 @@ lines. Level 0 starts easy, with the piece dropping from the top centre.
 
 Full rules, scoring and sound are in [`docs/GAME-DESIGN.md`](docs/GAME-DESIGN.md).
 
-## Build and test
+## 🔧 Build and test
 
 Run from the project root. The toolchain paths are in
 [`docs/GBSTUDIO-BASELINE.md`](docs/GBSTUDIO-BASELINE.md).
@@ -76,7 +76,7 @@ or with the CLI in [`docs/GBSTUDIO-BASELINE.md`](docs/GBSTUDIO-BASELINE.md).
 What each check proves, and what a good build looks like, is in
 [`docs/VERIFYING.md`](docs/VERIFYING.md).
 
-## Hardware
+## 🔌 Hardware
 
 - **Stream:** `play` runs the ROM on a Chromatic for a set time. It doesn't write
   the cartridge, and the host can't send button presses.
@@ -87,7 +87,7 @@ What each check proves, and what a good build looks like, is in
   2026-10-17. The vendor tool reported success. The on-device checks are still to
   do; see [`docs/VERIFYING.md`](docs/VERIFYING.md#7-hardware).
 
-## Project layout
+## 📁 Project layout
 
 ```
 project.gbsproj       GB Studio project (metadata only)
@@ -100,7 +100,7 @@ docs/                 design, verification, toolchain baseline, changelog
 VERSION               semantic version, 0.1.0
 ```
 
-## Documentation
+## 📚 Documentation
 
 | Doc | For |
 | --- | --- |
@@ -112,7 +112,7 @@ VERSION               semantic version, 0.1.0
 | [`docs/abes-ascii-tetris.md`](docs/abes-ascii-tetris.md) | The original brief |
 | [`docs/image.png`](docs/image.png) | The reference picture |
 
-## Versioning and commits
+## 📦 Versioning and commits
 
 - Versions follow [semantic versioning](https://semver.org). `VERSION` is the
   source of truth; patch bumps unless a minor or major change is agreed.
