@@ -19,12 +19,15 @@ original ASCII version.
 
 ## Intro
 
-
 A Tetris game for the ModRetro Chromatic, built as a native GB Studio 4.3.2
 project. The playfield is the 10-column ASCII well from the original terminal
 Tetris: `[]` blocks, `<!` `!>` walls, and a `<!====!>` floor.
 
 Four lines at once is an **ABETRIS**.
+
+<p align="center">
+  <img src="assets/backgrounds/title-chroma.png" alt="Abetris title screen: ABETRIS built from [] blocks, PRESS START" width="320">
+</p>
 
 **Status:** 0.1.0 is playable in the emulator and was flashed to a ModRetro
 Chromatic (the vendor tool reported success). The on-device boot check is still
